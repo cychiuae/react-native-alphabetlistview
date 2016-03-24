@@ -25,6 +25,9 @@ export default class SectionList extends Component {
     this.resetSection = this.resetSection.bind(this);
     this.detectAndScrollToSection = this.detectAndScrollToSection.bind(this);
     this.lastSelectedIndex = null;
+    this.state = {
+      justifyContent: 'center',
+    }
   }
 
   onSectionSelect(sectionId, fromTouch) {
@@ -80,10 +83,21 @@ export default class SectionList extends Component {
       this.measureTimer = setTimeout(() => {
         sectionItem.measure((x, y, width, height, pageX, pageY) => {
           //console.log([x, y, width, height, pageX, pageY]);
+          if (y < 0) {
+            pageY = -y + pageY;
+            this.setState({
+              justifyContent: "flex-start",
+            });
+          } else {
+            this.setState({
+              justifyContent: "center",
+            });
+          }
           this.measure = {
             y: pageY,
             height
           };
+
         })
       }, 0);
     }
@@ -131,9 +145,8 @@ export default class SectionList extends Component {
       //
       //}
     });
-
     return (
-      <View ref="view" style={[styles.container, this.props.style]}
+      <View ref="view" style={[styles.container, {justifyContent: this.state.justifyContent}, this.props.style]}
         onStartShouldSetResponder={returnTrue}
         onMoveShouldSetResponder={returnTrue}
         onResponderGrant={this.detectAndScrollToSection}
@@ -184,6 +197,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     alignItems:'center',
     justifyContent:'center',
+    overflow: 'hidden',
     right: 0,
     top: 0,
     bottom: 0,
