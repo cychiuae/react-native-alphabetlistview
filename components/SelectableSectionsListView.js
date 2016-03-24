@@ -207,8 +207,11 @@ export default class SelectableSectionsListView extends Component {
     const dataIsArray = Array.isArray(data);
     let sectionList;
     let renderSectionHeader;
+    const sortedKeys =
+      this.props.sortFunction ?
+      Object.keys(data).sort(this.props.sortFunction) :
+      Object.keys(data);
     let dataSource;
-
     if (dataIsArray) {
       dataSource = this.state.dataSource.cloneWithRows(data);
     } else {
@@ -216,7 +219,7 @@ export default class SelectableSectionsListView extends Component {
         <SectionList
           style={this.props.sectionListStyle}
           onSectionSelect={this.scrollToSection}
-          sections={Object.keys(data)}
+          sections={sortedKeys}
           data={data}
           getSectionListTitle={this.props.getSectionListTitle}
           component={this.props.sectionListItem}
@@ -224,7 +227,7 @@ export default class SelectableSectionsListView extends Component {
         null;
 
       renderSectionHeader = this.renderSectionHeader;
-      dataSource = this.state.dataSource.cloneWithRowsAndSections(data);
+      dataSource = this.state.dataSource.cloneWithRowsAndSections(data, sortedKeys);
     }
 
     const renderFooter = this.props.footer ?
@@ -380,5 +383,10 @@ SelectableSectionsListView.propTypes = {
    * Styles to pass to the section list container
    */
   sectionListStyle: stylesheetProp
+
+  /**
+   * A function for sorting the ListView
+   */
+  sortFunction: PropTypes.func,
 
 };
