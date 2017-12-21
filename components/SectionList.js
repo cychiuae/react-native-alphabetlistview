@@ -70,7 +70,7 @@ export default class SectionList extends Component {
     }
   }
 
-  fixSectionItemMeasure() {
+  fixSectionItemMeasure = () => {
     const sectionItem = this.refs.sectionItem0;
     if (!sectionItem) {
       return;
@@ -164,6 +164,7 @@ export default class SectionList extends Component {
         onResponderGrant={this.detectAndScrollToSection}
         onResponderMove={this.detectAndScrollToSection}
         onResponderRelease={this.resetSection}
+        onLayout={this.fixSectionItemMeasure}
       >
         {sections}
       </View>
